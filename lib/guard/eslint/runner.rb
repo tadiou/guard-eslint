@@ -14,8 +14,6 @@ module Guard
       def run(paths = [])
         command = build_command(paths)
         passed = system(*command)
-        Compat::UI.info "paths #{paths}"
-
         case @options[:notification]
         when :failed
           notify(passed) unless passed
@@ -23,7 +21,19 @@ module Guard
           notify(passed)
         end
 
+        show_output(paths)
+
         passed
+      end
+
+      def show_output(paths)
+        command = ['eslint']
+
+        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
+
+        command.concat(args_specified_by_user)
+        command.concat(paths)
+        system(*command)
       end
 
       def build_command(paths)
@@ -32,15 +42,8 @@ module Guard
         command.concat(['**/*.js', '**/*.es6']) if paths.empty?
 
         command.concat(['-f', 'json', '-o', json_file_path])
-        # command << '--force-exclusion'
         command.concat(args_specified_by_user)
-
-        Compat::UI.info "command #{command}"
         command.concat(paths)
-      end
-
-      def should_add_default_formatter_for_console?
-        !@options[:hide_stdout] && !include_formatter_for_console?(args_specified_by_user)
       end
 
       def args_specified_by_user
@@ -52,19 +55,6 @@ module Guard
           when NilClass then []
           else fail ':cli option must be either an array or string'
           end
-        end
-      end
-
-      def include_formatter_for_console?(cli_args)
-        index = -1
-        formatter_args = cli_args.group_by do |arg|
-          index += 1 if arg == '--format' || arg.start_with?('-f')
-          index
-        end
-        formatter_args.delete(-1)
-
-        formatter_args.each_value.any? do |args|
-          args.none? { |a| a == '--out' || a.start_with?('-o') }
         end
       end
 
@@ -105,7 +95,7 @@ module Guard
 
         errors_count = summary[:errors]
         text << pluralize(errors_count, 'error', no_for_zero: true)
-        text << ' detected'
+        text << ' detected, '
 
         warning_count = summary[:warnings]
         text << pluralize(warning_count, 'warning', no_for_zero: true)

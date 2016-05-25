@@ -18,7 +18,7 @@ module Guard
 
       @options = {
         all_on_start: true,
-        keep_failed:  true,
+        keep_failed:  false,
         notification: :failed,
         cli: nil,
         hide_stdout: false
@@ -45,7 +45,7 @@ module Guard
     # @return [Object] the task result
     #
     def reload
-      # runner.reload
+      runner.reload
     end
 
     # Called when just `enter` is pressed
@@ -76,7 +76,7 @@ module Guard
     # @return [Object] the task result
     #
     def run_on_modifications(paths)
-      # run_partially(paths)
+      run_partially(paths)
     end
 
     private
