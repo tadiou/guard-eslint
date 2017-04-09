@@ -27,9 +27,9 @@ module Guard
       end
 
       def show_output(paths)
-        command = ['eslint']
+        command = [{ 'PATH' => "#{`npm bin`.chomp}:#{ENV['PATH']}" }, 'eslint']
 
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
+        command.concat(Dir['**/**.js', '**/**.jsx', '**/**.es6'].reject { |f| f =~ %r{^(?:node_modules|bower_components)/} }) if paths.empty?
 
         command.concat(args_specified_by_user)
         command.concat(paths)
@@ -37,9 +37,9 @@ module Guard
       end
 
       def build_command(paths)
-        command = ['eslint']
+        command = [{ 'PATH' => "#{`npm bin`.chomp}:#{ENV['PATH']}" }, 'eslint']
 
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
+        command.concat(Dir['**/**.js', '**/**.jsx', '**/**.es6'].reject { |f| f =~ %r{^(?:node_modules|bower_components)/} }) if paths.empty?
 
         command.concat(['-f', 'json', '-o', json_file_path])
         command.concat(args_specified_by_user)
