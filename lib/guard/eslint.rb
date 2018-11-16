@@ -23,6 +23,7 @@ module Guard
         cli: nil,
         formatter: nil,
         hide_stdout: false,
+        command: 'eslint',
         default_paths: ['**/*.js', '**/*.es6'],
       }.merge(options)
 

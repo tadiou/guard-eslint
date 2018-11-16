@@ -35,7 +35,7 @@ module Guard
       # formatter that it uses for output.
       # This because eslint doesn't support multiple formatters during the same run.
       def run_for_output(paths)
-        command = ['eslint']
+        command = [options[:command]]
 
         command.concat(args_specified_by_user)
         command.concat(['-f', options[:formatter]]) if options[:formatter]
@@ -44,7 +44,7 @@ module Guard
       end
 
       def command_for_check(paths)
-        command = ['eslint']
+        command = [options[:command]]
 
         command.concat(args_specified_by_user)
         command.concat(['-f', 'json', '-o', json_file_path])
