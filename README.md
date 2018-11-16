@@ -29,6 +29,7 @@ For a typical Rails app with webpack:
 
 ``` ruby
 guard :eslint, formatter: 'codeframe' do
+  watch(%r{^app/javascript/.+\.(js|es6)$})
   watch(%r{^spec/javascript/.+\.(js|es6)$})
 end
 ```
