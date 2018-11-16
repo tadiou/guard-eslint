@@ -11,10 +11,12 @@ module Guard
         @options = options
       end
 
+      attr_reader :options
+
       def run(paths = [])
         command = command_for_check(paths)
         passed = system(*command)
-        case @options[:notification]
+        case options[:notification]
         when :failed
           notify(passed) unless passed
         when true
@@ -34,8 +36,8 @@ module Guard
         command = ['eslint']
 
         command.concat(args_specified_by_user)
-        command.concat(['-f', @options[:formatter]]) if @options[:formatter]
         command.concat(['**/*.js', '**/*.es6']) if paths.empty?
+        command.concat(['-f', options[:formatter]]) if options[:formatter]
         command.concat(paths)
         system(*command)
       end
@@ -51,7 +53,7 @@ module Guard
 
       def args_specified_by_user
         @args_specified_by_user ||= begin
-          args = @options[:cli]
+          args = options[:cli]
           case args
           when Array    then args
           when String   then args.shellsplit
