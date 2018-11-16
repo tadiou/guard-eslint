@@ -13,7 +13,9 @@ module Guard
 
       attr_reader :options
 
-      def run(paths = [])
+      def run(paths)
+        paths = options[:default_paths] unless paths
+
         command = command_for_check(paths)
         passed = system(*command)
         case options[:notification]
@@ -36,7 +38,6 @@ module Guard
         command = ['eslint']
 
         command.concat(args_specified_by_user)
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
         command.concat(['-f', options[:formatter]]) if options[:formatter]
         command.concat(paths)
         system(*command)
@@ -47,7 +48,6 @@ module Guard
 
         command.concat(args_specified_by_user)
         command.concat(['-f', 'json', '-o', json_file_path])
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
         command.concat(paths)
       end
 

@@ -22,7 +22,8 @@ module Guard
         notification: :failed,
         cli: nil,
         formatter: nil,
-        hide_stdout: false
+        hide_stdout: false,
+        default_paths: ['**/*.js', '**/*.es6'],
       }.merge(options)
 
       @failed_paths = []
