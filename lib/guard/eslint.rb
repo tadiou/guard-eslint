@@ -17,12 +17,14 @@ module Guard
       super
 
       @options = {
-        all_on_start: true,
-        keep_failed:  false,
+        all_on_start: false,
+        keep_failed: false,
         notification: :failed,
         cli: nil,
         formatter: nil,
-        hide_stdout: false
+        command: 'eslint',
+        default_paths: ['**/*.js', '**/*.es6'],
+        no_for_zero: true,
       }.merge(options)
 
       @failed_paths = []

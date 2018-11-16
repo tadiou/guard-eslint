@@ -1,8 +1,7 @@
 # Guard::Eslint
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/guard/eslint`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Guard::Eslint allows you to automatically run eslint when you change a Javascript/ES6 file.
+This is best when run after your Javascript tests pass.
 
 ## Installation
 
@@ -22,15 +21,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Please read [Guard usage doc](https://github.com/guard/guard#readme).
 
-## Development
+## Guardfile
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+For a typical Rails app with webpack:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+``` ruby
+guard :eslint, formatter: 'codeframe' do
+  watch(%r{^app/javascript/.+\.(js|es6)$})
+  watch(%r{^spec/javascript/.+\.(js|es6)$})
+end
+```
+
+### List of available options:
+
+``` ruby
+all_on_start: true                     # Run all specs after changed specs pass.
+keep_failed: false                     # Keep failed files until they pass (add them to new ones)
+notification: :failed                  # Display notification when eslint reports an issue.
+                                       # If you want to always notify, set to true.
+cli: nil                               # Additional command-line options to pass to eslint.
+                                       # Don't use the '-f' or '--format' option here.
+formatter: nil                         # Formatter to use for output to the console.
+command: 'eslint'                      # Specify a custom path to the eslint command.
+default_paths: ['**/*.js', '**/*.es6'] # The default paths that will be used for "all_on_start".
+no_for_zero: false                     # When displaying "0" for results, use the word "no" instead.
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/guard-eslint.
+Bug reports and pull requests are welcome on GitHub at https://github.com/RobinDaugherty/guard-eslint.
 
+* Please create a topic branch for every separate change you make.
+* Make sure your patches are well-tested.
+* Update the README to reflect your changes.
+* Please **do not change** the version number.
+* Open a pull request. 

@@ -11,10 +11,14 @@ module Guard
         @options = options
       end
 
-      def run(paths = [])
+      attr_reader :options
+
+      def run(paths)
+        paths = options[:default_paths] unless paths
+
         command = command_for_check(paths)
         passed = system(*command)
-        case @options[:notification]
+        case options[:notification]
         when :failed
           notify(passed) unless passed
         when true
@@ -31,27 +35,25 @@ module Guard
       # formatter that it uses for output.
       # This because eslint doesn't support multiple formatters during the same run.
       def run_for_output(paths)
-        command = ['eslint']
+        command = [options[:command]]
 
         command.concat(args_specified_by_user)
-        command.concat(['-f', @options[:formatter]]) if @options[:formatter]
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
+        command.concat(['-f', options[:formatter]]) if options[:formatter]
         command.concat(paths)
         system(*command)
       end
 
       def command_for_check(paths)
-        command = ['eslint']
+        command = [options[:command]]
 
         command.concat(args_specified_by_user)
         command.concat(['-f', 'json', '-o', json_file_path])
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
         command.concat(paths)
       end
 
       def args_specified_by_user
         @args_specified_by_user ||= begin
-          args = @options[:cli]
+          args = options[:cli]
           case args
           when Array    then args
           when String   then args.shellsplit
@@ -110,7 +112,7 @@ module Guard
         result.reject { |f| f[:messages].empty? }.map { |f| f[:filePath] }
       end
 
-      def pluralize(number, thing, options = {})
+      def pluralize(number, thing)
         text = ''
 
         if number == 0 && options[:no_for_zero]
