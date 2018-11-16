@@ -12,7 +12,7 @@ module Guard
       end
 
       def run(paths = [])
-        command = build_command(paths)
+        command = command_for_check(paths)
         passed = system(*command)
         case @options[:notification]
         when :failed
@@ -21,28 +21,31 @@ module Guard
           notify(passed)
         end
 
-        show_output(paths)
+        run_for_output(paths)
 
         passed
       end
 
-      def show_output(paths)
+      ##
+      # Once eslint reports a failure, we have to run it again to show the results using the
+      # formatter that it uses for output.
+      # This because eslint doesn't support multiple formatters during the same run.
+      def run_for_output(paths)
         command = ['eslint']
 
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
-
         command.concat(args_specified_by_user)
+        command.concat(['-f', @options[:formatter]]) if @options[:formatter]
+        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
         command.concat(paths)
         system(*command)
       end
 
-      def build_command(paths)
+      def command_for_check(paths)
         command = ['eslint']
 
-        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
-
-        command.concat(['-f', 'json', '-o', json_file_path])
         command.concat(args_specified_by_user)
+        command.concat(['-f', 'json', '-o', json_file_path])
+        command.concat(['**/*.js', '**/*.es6']) if paths.empty?
         command.concat(paths)
       end
 

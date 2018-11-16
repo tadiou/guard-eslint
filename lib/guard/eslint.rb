@@ -21,6 +21,7 @@ module Guard
         keep_failed:  false,
         notification: :failed,
         cli: nil,
+        formatter: nil,
         hide_stdout: false
       }.merge(options)
 
