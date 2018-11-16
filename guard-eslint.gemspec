@@ -3,33 +3,33 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'guard/eslint/version'
 
-Gem::Specification.new do |spec|
-  spec.name          = "guard-eslint"
-  spec.version       = Guard::EslintVersion.to_s
-  spec.authors       = ["tadiou"]
-  spec.email         = ["therearedemonsinsideofus@gmail.com"]
+Gem::Specification.new do |s|
+  s.name          = "guard-eslint"
+  s.version       = Guard::EslintVersion.to_s
+  s.authors       = %w[tadiou RobinDaugherty]
+  s.email         = %w[therearedemonsinsideofus@gmail.com robin@robindaugherty.net]
 
-  spec.summary       = %q{Creates a guard plugin for eslint.}
-  spec.homepage      = "http://github.com/quesbook"
+  s.description   = %q{Allows you to add eslint to your Guard toolchain, so that eslint is run.}
+  s.summary       = %q{Guard to run eslint.}
+  s.homepage      = "https://github.com/RobinDaugherty/guard-eslint"
+  s.license       = "MIT"
 
-  # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
-  # delete this section to allow pushing this gem to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
+  if s.respond_to?(:metadata)
+    s.metadata['changelog_uri'] = 'https://github.com/RobinDaugherty/guard-eslint/releases'
+    s.metadata['source_code_uri'] = 'https://github.com/RobinDaugherty/guard-eslint'
+    s.metadata['bug_tracker_uri'] = 'https://github.com/RobinDaugherty/guard-eslint/issues'
   else
-    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
+    puts "Your RubyGems does not support metadata. Update if you'd like to make a release."
   end
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  s.require_paths = ["lib"]
 
-  spec.add_runtime_dependency 'guard', "~> 2.1"
-  spec.add_runtime_dependency 'guard-compat', "~> 1.1"
-  spec.add_runtime_dependency 'eslint-rails', "~> 1.0.0"
+  s.required_ruby_version = ">= 2.0.0"
 
-  spec.add_development_dependency "bundler", "~> 1.11"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  s.add_dependency 'guard', "~> 2.1"
+  s.add_dependency 'guard-compat', "~> 1.1"
+
+  s.add_development_dependency "rake", "~> 10.0"
+  s.add_development_dependency "rspec", "~> 3.0"
 end
